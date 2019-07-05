@@ -1,0 +1,99 @@
+-----------------------------------------------------------------
+	代理: 
+		接口文档： https://www.cnblogs.com/e-cat/p/8656040.html
+		豆瓣:
+			hostname:'douban.uieee.com',//主机名
+		    port: 443,//端口
+		    path:'/v2/movie/top250?start=3&count=1',
+		    method:'get'
+
+		数据代理proxy:		request请求 抓取异步数据
+		  options={
+		    hostname:'api.douban.com',
+		    port:443,
+		    path:'/v2/movie/top250?count='+req.query.count,
+		    method:'GET'
+		  };
+
+		  发送http[s]请求
+		  http[s].request(配置项,回调(响应对象resHttp))	返回请求对象reqHttp
+		  	resHttp 响应对象
+		    resHttp.statusCode 状态码  200 OK
+		    resHttp.headers 获取响应头信息
+		    resHttp.setEncoding('utf-8') 设置编码方式
+		    resHttp.on('data/end',fn)  ->send给前端
+		  });
+
+		  reqHttp 请求对象
+		  reqHttp.on('error',(err)=>{console.log(err)});	监听请求失败信息
+		  reqHttp.end();请求结束
+	------------------------------------------------------------------------
+	socket.io 
+
+		场景：
+			Web领域的实时推送技术，也被称作Realtime技术。这种技术要达到的目的是让用户不需要刷新浏览器就可以获得实时更新。它有着广泛的应用场景，比如在线聊天室、在线客服系统、评论系统、WebIM等。
+		原理：
+			双向通信,前端H5api （WebSocket） + 后端net模块
+		API:
+			cn:
+				https://www.w3cschool.cn/socket/socket-k49j2eia.html
+			en:
+				https://socket.io/
+
+		服务端socket环境：
+			const app = express(); 创建express应用
+			const server = require('http').Server|createServer(app);//创建web服务器,集成app应用 Server(fn|obj)==createServer(fn|obj)
+			const io = require('socket.io')(server);//创建io,集成到server服务
+			server.listen(3000, () => {});
+			require('./mod/chat-server')(io);
+		配合express脚手架
+			修改www:
+				const SOCKETIO = require('socket.io');//创建socket实例
+				const io = SOCKETIO.listen(server);//监听http实例，未来3000端口下的http请求，会触发socket
+				module.export = io;
+					注意： www 不热重启，不检查
+		客户端配置:
+			html里面引入:
+				<script src="/socket.io/socket.io.js"></script>
+				连接服务器：socket = io('http://localhost:3000');
+
+		服务端主动推送到客户端:
+			let io = require('../../../bin/www'); require要在需要时再引入
+		    io.emit('mess_type',{data:'服务端的推送数据')//推送
+
+		    客户端接受
+		    socket.on('new_movie',(data)=>{
+				console.log('首页_客户端收到',data)
+			})
+		客户端推送到客户端:
+			客户端(未指定消息|指定的消息)->服务器(广播|私信给指定)->客户端
+		聊天室思想:
+			客户端(未指定消息|指定的消息)->服务器(广播|私信给指定)->客户端
+
+		服务端(io)
+		
+			检测客户端连接：io.on('connection', (socket) =>{}) 回调函数接收客户端socket
+				接受:socket.on('消息名称',(data)=>{}) data=接受到的消息
+				广播:	io.emit('消息名称', {数据});
+
+				检测客户端下线:	socket.on('disconnect',(data)=>{})
+				接受私信:
+					socket.on('消息名称',(toUserName,data,callback)=>{})
+					toUserName==目标用户 callback==给发送端的回调
+				发私信:	接受消息的socket.emit('消息名称',{数据})
+					发私信	->		socket   == onlineUsers[toUserName]
+					注意,data数据 里面不可以包含socket对象,发往客户端,量太大
+		客户端（socket)：
+
+			发送未指定消息:	socket.emit('消息名称',{到服务器的数据})
+			发送指定消息:	socket.emit('消息名称',toUserName,{到服务器的数据},(由服务器返回的数据)=>{})
+			接受消息:	socket.on('消息名称',(data)=>{})
+
+
+		需求:
+			当有人连接或断开连接时，将消息广播给连接的用户 √
+			添加对昵称的支持 √
+			显示谁在线  √
+			添加私人消息 √
+
+-------------------------------------------------------------------------

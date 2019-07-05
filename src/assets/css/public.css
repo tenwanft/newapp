@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* CSS Document */
+html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,menu,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+pre,i,code,address,caption,cite,code,em,strong,th,tt{font-size:100%;font-weight:normal;font-style:normal;}
+p{white-space:normal;word-break:break-all;word-wrap:break-word;}
+table{border-collapse:collapse;border-spacing:0;}
+table th,table td{word-wrap:break-word;overflow:hidden;}
+ul,ol,menu{list-style:none outside none;}
+fieldset,img{border:none;}
+input{vertical-align:middle;}
+button {cursor:pointer; border:none;}
+textarea{vertical-align:middle;resize:both;}
+
+/* apply */
+.clearfix:after {display:block; clear:both; content:"."; visibility:hidden; height:0;}
+*html .clearfix {height:1%;}
+*:first-child+html .clearfix {height:1%;}
+.float_l {float:left; display:inline;}
+.float_r {float:right; display:inline;}
+.hide_a {overflow:hidden; display:block; font-size:0;}
+.absolute {position:absolute;}
+.relative {position:relative;}
+.clear {clear:both;}
+
+body {font:14px Arial,Verdana,Helvetica,sans-serif; line-height:1.5; background-color:#fff; color:#333;}
+a {color:#333; text-decoration:none;}
+a:hover {color:#333; text-decoration:none;}
+a.link_purple:link,a.link_purple:visited {color:#333; text-decoration:underline;}
+a.link_purple:hover,a.link_purple:active {color:#333; text-decoration:underline;}
+.red {color:#8e0c3a;}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+
+<body>
+  <img src="../../../img/noimage.png" alt="">
+  <img src="../../../upload/noimage.png" alt="">
+  <img src="../../../admin/img/noimage.png" alt="">
+  用户端页面
+  <h3 id="h3">-</h3>
+  <hr>
+
+  <input type="button" value="读node_api" id="btn1">
+  <input type="button" value="读豆瓣api" id="btn2">
+  <a href="/index./html">首页</a>
+  <a href="/bbs.html">聊天室</a>
+
+
+  <script>
+    $(function () {
+      $('#btn1').click(function () {
+        $.ajax({
+          url: 'http://localhost:3000/api/home',
+          data: { _page: 1, _limit: 5 },
+          success: function (res) {
+            console.log('node_res', res)
+          }
+        })
+      })
+
+      $('#btn2').click(function () {
+        $.ajax({
+          // url: 'https://douban.uieee.com/v2/movie/top250',
+          url: 'http://localhost:3000/proxy/v2/movie/top250',
+          // url: 'http://localhost:3000/proxy/v2/music/search',
+          data: { start: 3, count: 3 },
+          // data: { q: '忘情水',start:'0'},
+          success: function (res) {
+            console.log('douban_res', res)
+            
+          }
+        })
+      })
+
+    })
+  </script>
+
+  <!-- socket客户端配置 -->
+  <script src="./js/socket.io.js"></script>
+  <script src="./js/port.js"></script>
+  <script>
+    //客户端的引入，会暴露一个io对象
+    var socket = io(port);//链接服务器
+
+    //客户端的订阅
+    socket.on('new_banner',(res)=>{
+      console.log('收到',res.data)
+      document.getElementById('h3').innerHTML = res.data.title
+    })
+  </script>
+
+</body>
+
+</html>
